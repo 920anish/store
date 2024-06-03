@@ -13,7 +13,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   int currentPage = 0;
   final List<Map<String, String>> welcomeData = [
     {
-      "text": "Welcome to Simply Store, Let’s shop!",
+      "text": "Welcome to 920 Store, Let’s shop!",
       "image": "assets/welcome_1.svg"
     },
     {
@@ -35,7 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             children: <Widget>[
               const SizedBox(height: 20), // Space from the top
-              const Text('920 Store!', style: headingStyle),
+              const Text('Store', style: headingStyle),
               const SizedBox(height: 10),
               const Text(
                 'Discover amazing products and enjoy seamless shopping.',
