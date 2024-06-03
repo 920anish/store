@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:store/screens/welcome/welcome_screen.dart';
+import 'package:store/k.dart';
+import 'routes.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -8,18 +10,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       title: 'Store',
       theme: ThemeData(
         fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      initialRoute: AppRoutes.welcome,
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:store/k.dart';
+import '../../routes.dart';
 import 'welcome_content.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -71,7 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Implement navigation to the next screen
+                  Navigator.pushNamed(context, AppRoutes.home);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kPrimaryColor,
