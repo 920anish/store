@@ -11,9 +11,11 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   int currentPage = 0;
+  final PageController _pageController = PageController(initialPage: 0);
+
   final List<Map<String, String>> welcomeData = [
     {
-      "text": "Welcome to 920 Store, Let’s shop!",
+      "text": "Welcome to your Store, Let’s shop!",
       "image": "assets/welcome_1.svg"
     },
     {
@@ -34,18 +36,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           width: double.infinity,
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 40), // Space from the top
-              const Text('Store', style: headingStyle),
-              const SizedBox(height: 10),
-              const Text(
-                'Discover amazing products and enjoy seamless shopping.',
-                style: kSubtitleTextStyle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // Space from the top
               Expanded(
                 flex: 3,
                 child: PageView.builder(
+                  controller: _pageController,
                   onPageChanged: (value) {
                     setState(() {
                       currentPage = value;
@@ -58,39 +53,36 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: <Widget>[
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          welcomeData.length,
-                              (index) => buildDot(index),
-                        ),
-                      ),
-                      const Spacer(flex: 3),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Implement navigation to the next screen
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: kPrimaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        ),
-                        child: const Text('Let\'s Go   →', style: kButtonTextStyle),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  welcomeData.length,
+                      (index) => buildDot(index),
                 ),
               ),
+              const SizedBox(height: 20),
+              const Text('Store', style: headingStyle),
+              const SizedBox(height: 10),
+              const Text(
+                'Discover amazing products and enjoy seamless shopping.',
+                style: kSubtitleTextStyle,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Implement navigation to the next screen
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kPrimaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                ),
+                child: const Text('Let\'s Go   →', style: kButtonTextStyle),
+              ),
+              const SizedBox(height: 70),
             ],
           ),
         ),

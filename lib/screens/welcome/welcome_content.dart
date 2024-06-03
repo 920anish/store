@@ -34,6 +34,7 @@ class WelcomeContent extends StatelessWidget {
             ),
           ),
         ),
+        const Spacer(),
       ],
     );
   }
