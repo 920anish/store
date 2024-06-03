@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store/k.dart';
+import 'welcome_content.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -34,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           width: double.infinity,
           child: Column(
             children: <Widget>[
-              const SizedBox(height: 20), // Space from the top
+              const SizedBox(height: 40), // Space from the top
               const Text('Store', style: headingStyle),
               const SizedBox(height: 10),
               const Text(
@@ -42,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 style: kSubtitleTextStyle,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               Expanded(
                 flex: 3,
                 child: PageView.builder(
@@ -108,42 +108,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         color: currentPage == index ? kPrimaryColor : const Color(0xFFD8D8D8),
         borderRadius: BorderRadius.circular(3),
       ),
-    );
-  }
-}
-class WelcomeContent extends StatelessWidget {
-  const WelcomeContent({
-    super.key,
-    required this.text,
-    required this.image,
-  });
-
-  final String text, image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const Spacer(),
-        SvgPicture.asset(
-          image,
-          height: 300, // Increase height to make SVG larger
-          width: double.infinity,
-          fit: BoxFit.contain,
-        ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 18,
-              color: kTextColor,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
