@@ -73,7 +73,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               const SizedBox(height: 20),
               CustomButton(
                 onPressed: () {
-                  Navigator.pushNamed(context , AppRoutes.home);
+                  Navigator.pushNamed(context , AppRoutes.login);
                 },
                 text: "Let's Go   →",
               ),

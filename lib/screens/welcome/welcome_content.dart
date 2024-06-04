@@ -18,7 +18,7 @@ class WelcomeContent extends StatelessWidget {
         const Spacer(),
         SvgPicture.asset(
           image,
-          height: 300, // Increase height to make SVG larger
+          height: 300,
           width: double.infinity,
           fit: BoxFit.contain,
         ),
