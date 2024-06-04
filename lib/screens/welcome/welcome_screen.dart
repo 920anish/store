@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:store/k.dart';
-import '../../routes.dart';
-import 'welcome_content.dart';
+import 'package:store/routes.dart';
+import 'package:store/screens/welcome/welcome_content.dart';
+import 'package:store/components/custom_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -70,18 +71,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CustomButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.home);
+                  Navigator.pushNamed(context , AppRoutes.home);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                ),
-                child: const Text('Let\'s Go   →', style: kButtonTextStyle),
+                text: "Let's Go   →",
               ),
               const SizedBox(height: 70),
             ],
