@@ -18,7 +18,7 @@ class WelcomeContent extends StatelessWidget {
         const Spacer(),
         SvgPicture.asset(
           image,
-          height: 300,
+          height: MediaQuery.of(context).size.height * 0.35,
           width: double.infinity,
           fit: BoxFit.contain,
         ),

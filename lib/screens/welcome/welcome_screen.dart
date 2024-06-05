@@ -34,51 +34,53 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 20), // Space from the top
-              Expanded(
-                flex: 3,
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (value) {
-                    setState(() {
-                      currentPage = value;
-                    });
-                  },
-                  itemCount: welcomeData.length,
-                  itemBuilder: (context, index) => WelcomeContent(
-                    image: welcomeData[index]["image"]!,
-                    text: welcomeData[index]['text']!,
+        child: SingleChildScrollView(
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20), // Space from the top
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentPage = value;
+                      });
+                    },
+                    itemCount: welcomeData.length,
+                    itemBuilder: (context, index) => WelcomeContent(
+                      image: welcomeData[index]["image"]!,
+                      text: welcomeData[index]['text']!,
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  welcomeData.length,
-                      (index) => buildDot(index),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    welcomeData.length,
+                        (index) => buildDot(index),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text('Store', style: headingStyle),
-              const SizedBox(height: 10),
-              const Text(
-                'Discover amazing products and enjoy seamless shopping.',
-                style: kSubtitleTextStyle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              CustomButton(
-                onPressed: () {
-                  Navigator.pushNamed(context , AppRoutes.login);
-                },
-                text: "Let's Go   →",
-              ),
-              const SizedBox(height: 70),
-            ],
+                const SizedBox(height: 20),
+                const Text('Store', style: headingStyle),
+                const SizedBox(height: 10),
+                const Text(
+                  'Discover amazing products and enjoy seamless shopping.',
+                  style: kSubtitleTextStyle,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context , AppRoutes.login);
+                  },
+                  text: "Let's Go   →",
+                ),
+                const SizedBox(height: 70),
+              ],
+            ),
           ),
         ),
       ),
