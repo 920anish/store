@@ -20,6 +20,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorSchemeSeed: Colors.grey,
+      ),
+      themeMode: ThemeMode.system,
       initialRoute: AppRoutes.welcome,
       onGenerateRoute: AppRoutes.generateRoute,
     );
