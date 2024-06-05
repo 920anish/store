@@ -78,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                   text: "Let's Go   →",
                 ),
-                const SizedBox(height: 70),
+                const SizedBox(height: 50),
               ],
             ),
           ),
