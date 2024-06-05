@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:store/screens/login/form.dart';
-import 'package:store/routes.dart'; // Add this to import routes if you have a route for registration
+import 'package:store/routes.dart';
+import '../../components/custom_button.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -48,23 +51,18 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
+                CustomButton(
+                  text: 'Google',
+                  icon: SvgPicture.asset(
+                    'assets/google.svg',
+                    width: 24,
+                    height: 24,
+                  ),
+                  color: Colors.black45,
                   onPressed: () {
                     // Implement Google login functionality
                   },
-                  icon: const Icon(Icons.login, color: Colors.black),
-                  label: const Text('Google', style: TextStyle(color: Colors.black)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
+
                 ),
                 const SizedBox(height: 20),
                 Row(
