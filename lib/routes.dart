@@ -3,6 +3,7 @@ import 'package:store/screens/login/login.dart';
 import 'package:store/screens/register/register.dart';
 import 'package:store/screens/welcome/welcome_screen.dart';
 import 'package:store/screens/home/home_screen.dart';
+import 'package:store/transition.dart';
 
 class AppRoutes {
   static const String welcome = '/';
@@ -10,19 +11,18 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
 
-
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case welcome:
-        return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+        return FadeRoute(page: const WelcomeScreen(), duration: const Duration(milliseconds: 200));
       case home:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return FadeRoute(page: const HomeScreen(), duration: const Duration(milliseconds: 200));
       case login:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return FadeRoute(page: const LoginScreen(), duration: const Duration(milliseconds: 200));
       case register:
-        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+        return FadeRoute(page: const RegisterScreen(), duration: const Duration(milliseconds: 200));
       default:
-        return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+        return FadeRoute(page: const WelcomeScreen(), duration: const Duration(milliseconds: 200));
     }
   }
 }
