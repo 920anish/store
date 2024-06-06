@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:store/screens/login/login_form.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:store/screens/register/register_form.dart';
 import 'package:store/routes.dart';
-import '../../components/custom_button.dart';
+import 'package:store/components/custom_button.dart';
 
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class LoginScreen extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 40),
                 const Text(
-                  'Welcome Back',
+                  'Create Account',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -30,7 +29,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Login to get inside',
+                  'Register to get started',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -38,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-                const LoginForm(),
+                const RegisterForm(),
                 const SizedBox(height: 20),
                 const Row(
                   children: <Widget>[
@@ -54,27 +53,26 @@ class LoginScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Google',
                   icon: SvgPicture.asset(
-                    'assets/google.svg',
+                    'assets/google.svg', // Path to your SVG file
                     width: 24,
                     height: 24,
                   ),
-                  color: Colors.black45,
+                  color: Colors.black45, // Custom color for the Google button
                   onPressed: () {
-                    // Implement Google login functionality
+                    // Implement Google register functionality
                   },
-
                 ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Don\'t have an account?'),
+                    const Text('Already have an account?'),
                     TextButton(
                       onPressed: () {
-                        // Navigate to the registration screen
-                        Navigator.pushNamed(context, AppRoutes.register);
+                        // Navigate to the login screen
+                        Navigator.pushNamed(context, AppRoutes.login);
                       },
-                      child: const Text('Register'),
+                      child: const Text('Login'),
                     ),
                   ],
                 ),

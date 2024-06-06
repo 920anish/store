@@ -97,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
               labelText: 'Password',
               hintText: 'Enter your password',
               border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.lock),
+              prefixIcon: const Icon(Icons.password),
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility : Icons.visibility_off,
