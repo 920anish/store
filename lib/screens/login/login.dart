@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store/screens/login/login_form.dart';
 import 'package:store/routes.dart';
 import '../../components/custom_button.dart';
-
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -11,6 +10,18 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text('Login'),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -62,7 +73,6 @@ class LoginScreen extends StatelessWidget {
                   onPressed: () {
                     // Implement Google login functionality
                   },
-
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -72,7 +82,7 @@ class LoginScreen extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         // Navigate to the registration screen
-                        Navigator.pushNamed(context, AppRoutes.register);
+                        Navigator.pushReplacementNamed(context, AppRoutes.register);
                       },
                       child: const Text('Register'),
                     ),

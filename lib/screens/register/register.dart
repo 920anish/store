@@ -10,15 +10,27 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        elevation: 0, // Remove shadow
+        backgroundColor: Colors.transparent, // Make appBar transparent
+        title: const Text('Register'),
+      ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const SizedBox(height: 40),
+                const SizedBox(height: 10),
                 const Text(
                   'Create Account',
                   style: TextStyle(
@@ -27,7 +39,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 const Text(
                   'Register to get started',
                   style: TextStyle(
@@ -36,7 +48,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20), // Reduced height for closer positioning
                 const RegisterForm(),
                 const SizedBox(height: 20),
                 const Row(
@@ -53,11 +65,11 @@ class RegisterScreen extends StatelessWidget {
                 CustomButton(
                   text: 'Google',
                   icon: SvgPicture.asset(
-                    'assets/google.svg', // Path to your SVG file
+                    'assets/google.svg',
                     width: 24,
                     height: 24,
                   ),
-                  color: Colors.black45, // Custom color for the Google button
+                  color: Colors.black45,
                   onPressed: () {
                     // Implement Google register functionality
                   },
@@ -69,8 +81,7 @@ class RegisterScreen extends StatelessWidget {
                     const Text('Already have an account?'),
                     TextButton(
                       onPressed: () {
-                        // Navigate to the login screen
-                        Navigator.pushNamed(context, AppRoutes.login);
+                        Navigator.pushReplacementNamed(context, AppRoutes.login);
                       },
                       child: const Text('Login'),
                     ),
