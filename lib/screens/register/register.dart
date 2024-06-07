@@ -48,7 +48,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20), // Reduced height for closer positioning
+                const SizedBox(height: 20),
                 const RegisterForm(),
                 const SizedBox(height: 20),
                 const Row(

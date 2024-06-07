@@ -136,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 20),
           CustomButton(
             onPressed: isFormValid ? _validateAndSubmit : null,
-            text: 'Sign in',
+            text: 'Login',
           ),
         ],
       ),
