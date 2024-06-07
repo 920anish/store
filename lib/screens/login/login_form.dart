@@ -129,6 +129,7 @@ class _LoginFormState extends State<LoginForm> {
             child: TextButton(
               onPressed: () {
                 // Implement "Forgot Password?" functionality
+                Navigator.pushNamed(context, AppRoutes.forgotPassword);
               },
               child: const Text('Forgot Password?'),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store/screens/forgot_password/forgot_password.dart';
 import 'package:store/screens/login/login.dart';
 import 'package:store/screens/register/register.dart';
 import 'package:store/screens/welcome/welcome_screen.dart';
@@ -9,6 +10,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String login = '/login';
   static const String register = '/register';
+  static const String forgotPassword ='/forgotPassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -18,6 +20,8 @@ class AppRoutes {
         return CustomPageRoute(builder: (_) => const HomeScreen());
       case login:
         return CustomPageRoute(builder: (_) => const LoginScreen());
+      case forgotPassword:
+        return CustomPageRoute(builder: (_)  => const ForgotPasswordScreen());
       case register:
         return CustomPageRoute(builder: (_) => const RegisterScreen());
       default:
