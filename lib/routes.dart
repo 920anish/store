@@ -3,7 +3,6 @@ import 'package:store/screens/login/login.dart';
 import 'package:store/screens/register/register.dart';
 import 'package:store/screens/welcome/welcome_screen.dart';
 import 'package:store/screens/home/home_screen.dart';
-import 'package:store/transition.dart';
 
 class AppRoutes {
   static const String welcome = '/';
@@ -14,15 +13,29 @@ class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case welcome:
-        return FadeRoute(page: const WelcomeScreen(), duration: const Duration(milliseconds: 200));
+        return CustomPageRoute(builder: (_) => const WelcomeScreen());
       case home:
-        return FadeRoute(page: const HomeScreen(), duration: const Duration(milliseconds: 200));
+        return CustomPageRoute(builder: (_) => const HomeScreen());
       case login:
-        return FadeRoute(page: const LoginScreen(), duration: const Duration(milliseconds: 200));
+        return CustomPageRoute(builder: (_) => const LoginScreen());
       case register:
-        return FadeRoute(page: const RegisterScreen(), duration: const Duration(milliseconds: 200));
+        return CustomPageRoute(builder: (_) => const RegisterScreen());
       default:
-        return FadeRoute(page: const WelcomeScreen(), duration: const Duration(milliseconds: 200));
+        return CustomPageRoute(builder: (_) => const WelcomeScreen());
     }
+  }
+}
+
+class CustomPageRoute<T> extends MaterialPageRoute<T> {
+  CustomPageRoute({required super.builder});
+
+  @override
+  Widget buildTransitions(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+      ) {
+    return child;
   }
 }

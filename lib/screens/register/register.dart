@@ -19,7 +19,7 @@ class RegisterScreen extends StatelessWidget {
           },
         ),
         elevation: 0, // Remove shadow
-        backgroundColor: Colors.transparent, // Make appBar transparent
+        // backgroundColor: Colors.transparent, // Make appBar transparent
         title: const Text('Register'),
       ),
 

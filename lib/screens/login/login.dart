@@ -19,7 +19,7 @@ class LoginScreen extends StatelessWidget {
           },
         ),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         title: const Text('Login'),
       ),
       body: SafeArea(
