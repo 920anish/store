@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
         useMaterial3: true,
+        brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
         fontFamily: 'Poppins',

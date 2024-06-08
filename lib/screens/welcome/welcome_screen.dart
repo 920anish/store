@@ -33,6 +33,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
