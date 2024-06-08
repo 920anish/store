@@ -82,9 +82,9 @@ class _RegisterFormState extends State<RegisterForm> {
           }
         }
 
-        // Navigate to home screen upon successful registration
+        // Navigate to login screen upon successful registration
         if (mounted) {
-          Navigator.pushNamed(context, AppRoutes.home);
+          Navigator.pushNamed(context, AppRoutes.login);
         }
       } on FirebaseAuthException catch (e) {
         String message = 'An error occurred, please try again.';

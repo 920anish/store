@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:store/components/custom_button.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth for authentication
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../routes.dart';
+
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -114,6 +117,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             const SnackBar(content: Text(
                 'Password reset instructions sent to your email')),
           );
+          Navigator.pushReplacementNamed(currentContext, AppRoutes.login);
         }).catchError((error) {
           if (kDebugMode) {
             print('Failed to send reset email: $error');

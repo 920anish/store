@@ -57,7 +57,7 @@ class _LoginFormState extends State<LoginForm> {
         if (userCredential.user != null && userCredential.user!.emailVerified) {
           if (mounted) {
             // User's email is verified, navigate to the desired screen
-            Navigator.pushNamed(context, AppRoutes.home);
+            Navigator.pushReplacementNamed(context, AppRoutes.home);
           }
         } else {
           setState(() {
@@ -161,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
             child: TextButton(
               onPressed: () {
                 // Implement "Forgot Password?" functionality
-                Navigator.pushNamed(context, AppRoutes.forgotPassword);
+                Navigator.pushReplacementNamed(context, AppRoutes.forgotPassword);
               },
               child: const Text('Forgot Password?'),
             ),
