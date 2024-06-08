@@ -9,9 +9,20 @@ class AuthService {
   // Sign in with email and password
   Future<User?> signIn(String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
-      return user;
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+
+      // Check if the user's email is verified
+      if (user != null && user.emailVerified) {
+        // User's email is verified, return the user object
+        return user;
+      } else {
+        // User's email is not verified, show an error or prompt for verification
+        if (kDebugMode) {
+          print('Email is not verified');
+        }
+        return null;
+      }
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -25,10 +36,10 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      if (user != null) {
 
-      // Send email verification
-      await user?.sendEmailVerification();
-
+        await user.sendEmailVerification();
+      }
       return user;
     } catch (e) {
       if (kDebugMode) {

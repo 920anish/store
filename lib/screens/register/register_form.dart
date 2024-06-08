@@ -62,8 +62,28 @@ class _RegisterFormState extends State<RegisterForm> {
         // Optionally, you can also update the display name
         await userCredential.user?.updateDisplayName(_usernameController.text.trim());
 
+        // Send email verification
+        try {
+          await userCredential.user?.sendEmailVerification();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('A verification email has been sent. Please check your inbox and verify your email.'),
+              ),
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to send verification email: $e'),
+              ),
+            );
+          }
+        }
+
         // Navigate to home screen upon successful registration
-        if (mounted) { // Check if the widget is still mounted
+        if (mounted) {
           Navigator.pushNamed(context, AppRoutes.home);
         }
       } on FirebaseAuthException catch (e) {
@@ -75,7 +95,7 @@ class _RegisterFormState extends State<RegisterForm> {
         } else if (e.code == 'invalid-email') {
           message = 'The email address is invalid.';
         }
-        if (mounted) { // Check if the widget is still mounted
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
         }
       } finally {

@@ -48,12 +48,21 @@ class _LoginFormState extends State<LoginForm> {
       });
 
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
-        if (mounted) { // Check if the widget is still mounted
-          Navigator.pushNamed(context, AppRoutes.home);
+
+        // Check if the user's email is verified
+        if (userCredential.user != null && userCredential.user!.emailVerified) {
+          if (mounted) {
+            // User's email is verified, navigate to the desired screen
+            Navigator.pushNamed(context, AppRoutes.home);
+          }
+        } else {
+          setState(() {
+            _errorMessage = 'Please verify your email address to continue.';
+          });
         }
       } on FirebaseAuthException catch (e) {
         setState(() {
