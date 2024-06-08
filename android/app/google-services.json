@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1019137659278",
+    "project_id": "store-920920",
+    "storage_bucket": "store-920920.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019137659278:android:fba40668f70609c0c054df",
+        "android_client_info": {
+          "package_name": "com.dontshop.now.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019137659278-749ujd3rrfvonfmlsqvk1nnc02b07ndk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dontshop.now.store",
+            "certificate_hash": "7f29270838063cde2cbf0b507aa8d5309a483a45"
+          }
+        },
+        {
+          "client_id": "1019137659278-q1h5c1la4pnjd02mmtsvib7vd1670hv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdnOm-cujwojxoVrCcmO7Hl9ALB7ncKSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019137659278-q1h5c1la4pnjd02mmtsvib7vd1670hv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
