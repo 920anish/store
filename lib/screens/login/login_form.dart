@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/components/custom_button.dart';
 import 'package:store/routes.dart';
 
@@ -16,6 +17,8 @@ class _LoginFormState extends State<LoginForm> {
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   bool _obscureText = true;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -37,10 +40,30 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {});
   }
 
-  void _validateAndSubmit() {
+  Future<void> _validateAndSubmit() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushNamed(context, AppRoutes.home);
-      // Implement login functionality
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        if (mounted) { // Check if the widget is still mounted
+          Navigator.pushNamed(context, AppRoutes.home);
+        }
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          _errorMessage = e.message;
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } else {
       if (_emailController.text.isEmpty || !_isEmailValid(_emailController.text)) {
         FocusScope.of(context).requestFocus(_emailFocusNode);
@@ -135,9 +158,17 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           const SizedBox(height: 20),
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
           CustomButton(
-            onPressed: isFormValid ? _validateAndSubmit : null,
-            text: 'Login',
+            onPressed: isFormValid && !_isLoading ? _validateAndSubmit : null,
+            text: _isLoading ? 'Loading...' : 'Login',
           ),
         ],
       ),

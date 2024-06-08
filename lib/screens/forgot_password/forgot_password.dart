@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:store/components/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth for authentication
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -29,7 +30,7 @@ class ForgotPasswordScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 40),
-            ForgotPasswordForm(),
+            ForgotPasswordForm(), // Use the modified form
           ],
         ),
       ),
@@ -41,7 +42,7 @@ class ForgotPasswordForm extends StatefulWidget {
   const ForgotPasswordForm({super.key});
 
   @override
-  State <ForgotPasswordForm> createState() => _ForgotPasswordFormState();
+  State<ForgotPasswordForm> createState() => _ForgotPasswordFormState();
 }
 
 class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
@@ -97,25 +98,40 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   void _updateButtonState(String value) {
     setState(() {
-      _isButtonDisabled = !_validateEmail(value).isNullOrEmpty;
+      _isButtonDisabled = _validateEmail(value) != null;
     });
   }
 
   void _submitForm() {
     final email = _emailController.text.trim();
+    final currentContext = context;
 
-    // Implement the forgot password functionality
-
-    if (kDebugMode) {
-      print('Email submitted: $email');
+    if (_formKey.currentState!.validate()) {
+      try {
+        FirebaseAuth.instance.sendPasswordResetEmail(email: email)
+            .then((_) {
+          ScaffoldMessenger.of(currentContext).showSnackBar(
+            const SnackBar(content: Text(
+                'Password reset instructions sent to your email')),
+          );
+        }).catchError((error) {
+          if (kDebugMode) {
+            print('Failed to send reset email: $error');
+          }
+          ScaffoldMessenger.of(currentContext).showSnackBar(
+            const SnackBar(content: Text(
+                'Failed to send reset email. Please try again later')),
+          );
+        });
+      } catch (e) {
+        if (kDebugMode) {
+          print('Failed to send reset email: $e');
+        }
+        ScaffoldMessenger.of(currentContext).showSnackBar(
+          const SnackBar(content: Text(
+              'Failed to send reset email. Please try again later')),
+        );
+      }
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset instructions sent to your email')),
-    );
   }
-}
-
-extension StringExtension on String? {
-  bool get isNullOrEmpty => this == null || this!.isEmpty;
 }

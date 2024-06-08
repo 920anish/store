@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/components/custom_button.dart';
 import 'package:store/routes.dart';
 
@@ -20,6 +21,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
   bool _passwordVisible = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -47,12 +49,44 @@ class _RegisterFormState extends State<RegisterForm> {
     setState(() {});
   }
 
-  void _validateAndSubmit() {
+  Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushNamed(context, AppRoutes.home);
-      // Implement registration functionality
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        // Optionally, you can also update the display name
+        await userCredential.user?.updateDisplayName(_usernameController.text.trim());
+
+        // Navigate to home screen upon successful registration
+        if (mounted) { // Check if the widget is still mounted
+          Navigator.pushNamed(context, AppRoutes.home);
+        }
+      } on FirebaseAuthException catch (e) {
+        String message = 'An error occurred, please try again.';
+        if (e.code == 'email-already-in-use') {
+          message = 'The email address is already in use.';
+        } else if (e.code == 'weak-password') {
+          message = 'The password is too weak.';
+        } else if (e.code == 'invalid-email') {
+          message = 'The email address is invalid.';
+        }
+        if (mounted) { // Check if the widget is still mounted
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+        }
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
+
+
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
@@ -187,13 +221,13 @@ class _RegisterFormState extends State<RegisterForm> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) {
-              _validateAndSubmit();
+              _registerUser();
             },
           ),
           const SizedBox(height: 20),
           CustomButton(
-            onPressed: isFormValid ? _validateAndSubmit : null,
-            text: 'Register',
+            onPressed: isFormValid ? _registerUser : null,
+            text: _isLoading ? 'Registering...' : 'Register',
           ),
         ],
       ),

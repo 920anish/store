@@ -3,9 +3,37 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store/screens/register/register_form.dart';
 import 'package:store/routes.dart';
 import 'package:store/components/custom_button.dart';
+import 'package:store/auth/auth.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  Future<void> _registerWithGoogle() async {
+    final authService = AuthService();
+    final user = await authService.signUpWithGoogle();
+    if (user != null) {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to register with Google. Please try again later.')),
+        );
+      }
+    }
+  }
+
+  void _navigateToLogin() {
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +46,9 @@ class RegisterScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        elevation: 0, // Remove shadow
-        // backgroundColor: Colors.transparent, // Make appBar transparent
+        elevation: 0,
         title: const Text('Register'),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -70,9 +96,7 @@ class RegisterScreen extends StatelessWidget {
                     height: 24,
                   ),
                   color: Colors.black45,
-                  onPressed: () {
-                    // Implement Google register functionality
-                  },
+                  onPressed: _registerWithGoogle,
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -80,9 +104,7 @@ class RegisterScreen extends StatelessWidget {
                   children: <Widget>[
                     const Text('Already have an account?'),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, AppRoutes.login);
-                      },
+                      onPressed: _navigateToLogin,
                       child: const Text('Login'),
                     ),
                   ],
