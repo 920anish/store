@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -14,10 +14,8 @@ class AuthService {
 
       // Check if the user's email is verified
       if (user != null && user.emailVerified) {
-        // User's email is verified, return the user object
         return user;
       } else {
-        // User's email is not verified, show an error or prompt for verification
         if (kDebugMode) {
           print('Email is not verified');
         }
@@ -34,10 +32,9 @@ class AuthService {
   // Register with email and password
   Future<User?> signUp(String email, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User? user = result.user;
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
       if (user != null) {
-
         await user.sendEmailVerification();
       }
       return user;
@@ -49,14 +46,12 @@ class AuthService {
     }
   }
 
-
   // Sign up with Google
   Future<User?> signUpWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
@@ -93,7 +88,6 @@ class AuthService {
       if (kDebugMode) {
         print(e.toString());
       }
-      return;
     }
   }
 }
