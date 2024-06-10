@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:store/components/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:store/components/custom_button.dart';
 import '../../routes.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -17,7 +15,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         if (didPop) {
           // Navigate back to the login screen after a short delay
           Future.delayed(Duration.zero, () {
-            Navigator.pushNamed(context, AppRoutes.login);
+            Navigator.pushReplacementNamed(context, AppRoutes.login);
           });
         }
       },
@@ -63,15 +61,18 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   bool _isButtonDisabled = true;
-  DateTime? _lastEmailSentTime;
-  Timer? _timer;
   String? _statusMessage;
   Color? _statusColor;
 
   @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_updateButtonState);
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -91,8 +92,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
               prefixIcon: Icon(Icons.email),
             ),
             validator: _validateEmail,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: _updateButtonState,
+            autovalidateMode: AutovalidateMode.disabled,
           ),
           const SizedBox(height: 20),
           CustomButton(
@@ -126,77 +126,48 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     return null;
   }
 
-  void _updateButtonState(String value) {
-    if (_lastEmailSentTime == null || DateTime.now().difference(_lastEmailSentTime!).inMinutes >= 1) {
+  void _updateButtonState() {
+    setState(() {
+      _isButtonDisabled = _validateEmail(_emailController.text) != null;
+      _statusMessage = null;
+      _statusColor = null;
+    });
+  }
+
+  void _submitForm() async {
+    final email = _emailController.text.trim();
+
+    if (_formKey.currentState!.validate()) {
+      await _resetPassword(email);
       setState(() {
-        _isButtonDisabled = _validateEmail(value) != null;
+        _emailController.clear();
+        _isButtonDisabled = true;
       });
     }
   }
 
-  void _submitForm() {
-    final email = _emailController.text.trim();
-    final currentContext = context;
-
-    if (_formKey.currentState!.validate()) {
-      if (_lastEmailSentTime == null || DateTime.now().difference(_lastEmailSentTime!).inMinutes >= 1) {
-        try {
-          FirebaseAuth.instance.sendPasswordResetEmail(email: email)
-              .then((_) {
-            _lastEmailSentTime = DateTime.now();
-            _startTimer();
-            ScaffoldMessenger.of(currentContext).showSnackBar(
-              const SnackBar(content: Text(
-                  'Password reset instructions sent to your email')),
-            );
-            setState(() {
-              _statusMessage = 'Please wait 60 seconds before trying again.';
-              _statusColor = Colors.blueGrey;
-              _isButtonDisabled = true;
-            });
-          }).catchError((error) {
-            if (kDebugMode) {
-              print('Failed to send reset email: $error');
-            }
-            setState(() {
-              _statusMessage = 'Failed to send reset email. Please try again later.';
-              _statusColor = Colors.red;
-            });
-          });
-        } catch (e) {
-          if (kDebugMode) {
-            print('Failed to send reset email: $e');
-          }
-          setState(() {
-            _statusMessage = 'Failed to send reset email. Please try again later.';
-            _statusColor = Colors.red;
-          });
-        }
-      } else {
-        final secondsLeft = 60 - DateTime.now().difference(_lastEmailSentTime!).inSeconds;
-        setState(() {
-          _statusMessage = 'Please wait $secondsLeft seconds before trying again.';
-          _statusColor = Colors.orange;
-        });
+  Future<void> _resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      showSnackBar('Password reset instructions sent to your email');
+    } on FirebaseAuthException catch (e) {
+      showSnackBar('Failed to send reset email. Please try again later.');
+      if (kDebugMode) {
+        print('Failed to send reset email: $e');
+      }
+    } catch (e) {
+      showSnackBar('Failed to send reset email. Please try again later.');
+      if (kDebugMode) {
+        print('Failed to send reset email: $e');
       }
     }
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final secondsLeft = 60 - DateTime.now().difference(_lastEmailSentTime!).inSeconds;
-      if (secondsLeft <= 0) {
-        setState(() {
-          _isButtonDisabled = _validateEmail(_emailController.text) != null;
-          _statusMessage = null;
-        });
-        _timer?.cancel();
-      } else {
-        setState(() {
-          _statusMessage = 'Please wait $secondsLeft seconds before trying again.';
-        });
-      }
-    });
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 }

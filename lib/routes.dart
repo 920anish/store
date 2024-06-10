@@ -10,7 +10,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String login = '/login';
   static const String register = '/register';
-  static const String forgotPassword ='/forgotPassword';
+  static const String forgotPassword = '/forgotPassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -21,7 +21,7 @@ class AppRoutes {
       case login:
         return CustomPageRoute(builder: (_) => const LoginScreen());
       case forgotPassword:
-        return CustomPageRoute(builder: (_)  => const ForgotPasswordScreen());
+        return CustomPageRoute(builder: (_) => const ForgotPasswordScreen());
       case register:
         return CustomPageRoute(builder: (_) => const RegisterScreen());
       default:
@@ -38,8 +38,7 @@ class CustomPageRoute<T> extends MaterialPageRoute<T> {
       BuildContext context,
       Animation<double> animation,
       Animation<double> secondaryAnimation,
-      Widget child,
-      ) {
+      Widget child) {
     return child;
   }
 }
