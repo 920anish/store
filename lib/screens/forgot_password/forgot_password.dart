@@ -15,7 +15,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         if (didPop) {
           // Navigate back to the login screen after a short delay
           Future.delayed(Duration.zero, () {
-            Navigator.pushReplacementNamed(context, AppRoutes.login);
+            Navigator.pushNamed(context, AppRoutes.login);
           });
         }
       },
@@ -61,6 +61,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   bool _isButtonDisabled = true;
+  bool _isSubmitting = false; // New state to track submission state
   String? _statusMessage;
   Color? _statusColor;
 
@@ -97,7 +98,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           const SizedBox(height: 20),
           CustomButton(
             text: 'Submit',
-            onPressed: _isButtonDisabled ? null : _submitForm,
+            onPressed: _isButtonDisabled || _isSubmitting ? null : _submitForm,
           ),
           const SizedBox(height: 20),
           if (_statusMessage != null)
@@ -138,10 +139,16 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     final email = _emailController.text.trim();
 
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isSubmitting = true; // Disable the button immediately
+      });
+
       await _resetPassword(email);
+
       setState(() {
         _emailController.clear();
         _isButtonDisabled = true;
+        _isSubmitting = false; // Re-enable the button after the operation is complete
       });
     }
   }
