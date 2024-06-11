@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/components/custom_button.dart';
 import '../../routes.dart';
+import '../../components/overlay.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -19,33 +20,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           });
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Forgot Password'),
-        ),
-        body: const SingleChildScrollView(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 40),
-              Text(
-                'Forgot your password?',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Enter your email address and we will send you instructions on how to reset your password.',
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 40),
-              ForgotPasswordForm(),
-            ],
-          ),
-        ),
-      ),
+      child: const ForgotPasswordForm(),
     );
   }
 }
@@ -61,9 +36,10 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   bool _isButtonDisabled = true;
-  bool _isSubmitting = false; // New state to track submission state
+  bool _isSubmitting = false;
   String? _statusMessage;
   Color? _statusColor;
+  bool _isLoading = false; // State variable for loading animation
 
   @override
   void initState() {
@@ -79,6 +55,39 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Forgot Password'),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 40),
+              const Text(
+                'Forgot your password?',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Enter your email address and we will send you instructions on how to reset your password.',
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+              _buildForm(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm() {
     return Form(
       key: _formKey,
       child: Column(
@@ -140,7 +149,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
     if (_formKey.currentState!.validate()) {
       setState(() {
-        _isSubmitting = true; // Disable the button immediately
+        _isSubmitting = true;
+        _isLoading = true; // Show loading animation
       });
 
       await _resetPassword(email);
@@ -148,7 +158,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
       setState(() {
         _emailController.clear();
         _isButtonDisabled = true;
-        _isSubmitting = false; // Re-enable the button after the operation is complete
+        _isSubmitting = false;
+        _isLoading = false; // Hide loading animation
       });
     }
   }

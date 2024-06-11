@@ -4,7 +4,9 @@ import 'package:store/components/custom_button.dart';
 import 'package:store/routes.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final ValueChanged<bool>? onLoadingStateChanged;
+
+  const LoginForm({super.key, this.onLoadingStateChanged});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -46,7 +48,7 @@ class _LoginFormState extends State<LoginForm> {
         _isLoading = true;
         _errorMessage = null;
       });
-
+      widget.onLoadingStateChanged?.call(true);
       try {
         UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
@@ -72,6 +74,7 @@ class _LoginFormState extends State<LoginForm> {
         setState(() {
           _isLoading = false;
         });
+        widget.onLoadingStateChanged?.call(false);
       }
     } else {
       if (_emailController.text.isEmpty || !_isEmailValid(_emailController.text)) {
@@ -92,34 +95,34 @@ class _LoginFormState extends State<LoginForm> {
     bool isFormValid = _isEmailValid(_emailController.text) && _passwordController.text.isNotEmpty;
 
     return Form(
-      key: _formKey,
-      child: Column(
+        key: _formKey,
+        child: Column(
         children: <Widget>[
-          TextFormField(
-            controller: _emailController,
-            focusNode: _emailFocusNode,
-            decoration: InputDecoration(
-              labelText: 'Email',
-              hintText: 'Enter your email',
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.email),
-              errorText: !_isEmailValid(_emailController.text) && _emailController.text.isNotEmpty
-                  ? 'Please enter a valid email'
-                  : null,
-            ),
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              } else if (!_isEmailValid(value)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_passwordFocusNode);
-            },
-          ),
+        TextFormField(
+        controller: _emailController,
+        focusNode: _emailFocusNode,
+        decoration: InputDecoration(
+        labelText: 'Email',
+        hintText: 'Enter your email',
+        border: const OutlineInputBorder(),
+    prefixIcon: const Icon(Icons.email),
+    errorText: !_isEmailValid(_emailController.text) && _emailController.text.isNotEmpty
+    ? 'Please enter a valid email'
+        : null,
+    ),
+    textInputAction: TextInputAction.next,
+    validator: (value) {
+    if (value == null || value.isEmpty) {
+    return 'Please enter your email';
+    } else if (!_isEmailValid(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+    },
+          onFieldSubmitted: (_) {
+            FocusScope.of(context).requestFocus(_passwordFocusNode);
+          },
+        ),
           const SizedBox(height: 20),
           TextFormField(
             controller: _passwordController,
@@ -160,7 +163,6 @@ class _LoginFormState extends State<LoginForm> {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                // Implement "Forgot Password?" functionality
                 Navigator.pushReplacementNamed(context, AppRoutes.forgotPassword);
               },
               child: const Text('Forgot Password?'),
@@ -180,7 +182,7 @@ class _LoginFormState extends State<LoginForm> {
             text: _isLoading ? 'Loading...' : 'Login',
           ),
         ],
-      ),
+        ),
     );
   }
 }
