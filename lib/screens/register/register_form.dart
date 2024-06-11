@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/components/custom_button.dart';
-import 'package:store/routes.dart';
-import 'package:store/components/overlay.dart';
+import '../../routes.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+  final ValueChanged<bool>? onLoadingStateChanged;
+
+  const RegisterForm({super.key, this.onLoadingStateChanged});
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();
@@ -23,6 +24,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final _confirmPasswordFocusNode = FocusNode();
   bool _passwordVisible = false;
   bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -54,7 +56,9 @@ class _RegisterFormState extends State<RegisterForm> {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
+        _errorMessage = null;
       });
+      widget.onLoadingStateChanged?.call(true);
 
       try {
         UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -95,12 +99,15 @@ class _RegisterFormState extends State<RegisterForm> {
           message = 'The email address is invalid.';
         }
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+          setState(() {
+            _errorMessage = message;
+          });
         }
       } finally {
         setState(() {
           _isLoading = false;
         });
+        widget.onLoadingStateChanged?.call(false);
       }
     }
   }
@@ -120,7 +127,7 @@ class _RegisterFormState extends State<RegisterForm> {
     if (value == null || value.isEmpty) {
       return 'Email is required';
     }
-    final emailRegExp = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegExp = RegExp(r'^[\w-.]+@([\w-]+.)+[\w-]{2,4}$');
     if (!emailRegExp.hasMatch(value)) {
       return 'Invalid email address';
     }
@@ -156,100 +163,105 @@ class _RegisterFormState extends State<RegisterForm> {
             _validatePassword(_passwordController.text) == null &&
             _validateConfirmPassword(_confirmPasswordController.text) == null;
 
-    return LoadingOverlay(
-      isLoading: _isLoading,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextFormField(
-              controller: _usernameController,
-              focusNode: _usernameFocusNode,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                hintText: 'Enter your username',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
-              ),
-              validator: _validateUsername,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(_emailFocusNode);
-              },
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextFormField(
+            controller: _usernameController,
+            focusNode: _usernameFocusNode,
+            decoration: const InputDecoration(
+              labelText: 'Username',
+              hintText: 'Enter your username',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.person),
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _emailController,
-              focusNode: _emailFocusNode,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                hintText: 'Enter your email',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
-              ),
-              validator: _validateEmail,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(_passwordFocusNode);
-              },
+            validator: _validateUsername,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_emailFocusNode);
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            controller: _emailController,
+            focusNode: _emailFocusNode,
+            decoration: const InputDecoration(
+              labelText: 'Email',
+              hintText: 'Enter your email',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email),
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _passwordController,
-              focusNode: _passwordFocusNode,
-              obscureText: !_passwordVisible,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                hintText: 'Enter your password',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.password),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                    _validateForm();
-                  },
+            validator: _validateEmail,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_passwordFocusNode);
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            controller: _passwordController,
+            focusNode: _passwordFocusNode,
+            obscureText: !_passwordVisible,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              hintText: 'Enter your password',
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.password),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
                 ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                  _validateForm();
+                },
               ),
-              validator: _validatePassword,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
-              },
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _confirmPasswordController,
-              focusNode: _confirmPasswordFocusNode,
-              obscureText: !_passwordVisible,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
-                hintText: 'Re-enter your password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.password),
+            validator: _validatePassword,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            controller: _confirmPasswordController,
+            focusNode: _confirmPasswordFocusNode,
+            obscureText: !_passwordVisible,
+            decoration: const InputDecoration(
+              labelText: 'Confirm Password',
+              hintText: 'Re-enter your password',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.password),
+            ),
+            validator: _validateConfirmPassword,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (_) {
+              _registerUser();
+            },
+          ),
+          const SizedBox(height: 20),
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
-              validator: _validateConfirmPassword,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) {
-                _registerUser();
-              },
             ),
-            const SizedBox(height: 20),
-            CustomButton(
-              onPressed: isFormValid ? _registerUser : null,
-              text: _isLoading ? 'Registering...' : 'Register',
-            ),
-          ],
-        ),
+          CustomButton(
+            onPressed: isFormValid && !_isLoading ? _registerUser : null,
+            text: _isLoading ? 'Registering...' : 'Register',
+          ),
+        ],
       ),
     );
   }

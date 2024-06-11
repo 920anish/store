@@ -89,7 +89,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
-                  const RegisterForm(),
+                  RegisterForm(
+                    onLoadingStateChanged: (isLoading) {
+                      setState(() {
+                        _isLoading = isLoading;
+                      });
+                    },
+                  ),
                   const SizedBox(height: 20),
                   const Row(
                     children: <Widget>[
@@ -110,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: 24,
                     ),
                     color: Colors.black45,
-                    onPressed: _registerWithGoogle,
+                    onPressed: _isLoading ? null : _registerWithGoogle,
                   ),
                   const SizedBox(height: 20),
                   Row(
