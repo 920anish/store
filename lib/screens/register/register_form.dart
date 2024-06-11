@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/components/custom_button.dart';
 import 'package:store/routes.dart';
+import 'package:store/components/overlay.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -54,15 +55,14 @@ class _RegisterFormState extends State<RegisterForm> {
       setState(() {
         _isLoading = true;
       });
+
       try {
         UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        // Optionally, you can also update the display name
         await userCredential.user?.updateDisplayName(_usernameController.text.trim());
 
-        // Send email verification
         try {
           await userCredential.user?.sendEmailVerification();
           if (mounted) {
@@ -82,7 +82,6 @@ class _RegisterFormState extends State<RegisterForm> {
           }
         }
 
-        // Navigate to login screen upon successful registration
         if (mounted) {
           Navigator.pushReplacementNamed(context, AppRoutes.login);
         }
@@ -105,8 +104,6 @@ class _RegisterFormState extends State<RegisterForm> {
       }
     }
   }
-
-
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
@@ -159,97 +156,100 @@ class _RegisterFormState extends State<RegisterForm> {
             _validatePassword(_passwordController.text) == null &&
             _validateConfirmPassword(_confirmPasswordController.text) == null;
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            controller: _usernameController,
-            focusNode: _usernameFocusNode,
-            decoration: const InputDecoration(
-              labelText: 'Username',
-              hintText: 'Enter your username',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.person),
-            ),
-            validator: _validateUsername,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_emailFocusNode);
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: _emailController,
-            focusNode: _emailFocusNode,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              hintText: 'Enter your email',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.email),
-            ),
-            validator: _validateEmail,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_passwordFocusNode);
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: _passwordController,
-            focusNode: _passwordFocusNode,
-            obscureText: !_passwordVisible,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              hintText: 'Enter your password',
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.password),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _passwordVisible = !_passwordVisible;
-                  });
-                  _validateForm();
-                },
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              controller: _usernameController,
+              focusNode: _usernameFocusNode,
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                hintText: 'Enter your username',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person),
               ),
+              validator: _validateUsername,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_emailFocusNode);
+              },
             ),
-            validator: _validatePassword,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: _confirmPasswordController,
-            focusNode: _confirmPasswordFocusNode,
-            obscureText: !_passwordVisible,
-            decoration: const InputDecoration(
-              labelText: 'Confirm Password',
-              hintText: 'Re-enter your password',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.password),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _emailController,
+              focusNode: _emailFocusNode,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter your email',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.email),
+              ),
+              validator: _validateEmail,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_passwordFocusNode);
+              },
             ),
-            validator: _validateConfirmPassword,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) {
-              _registerUser();
-            },
-          ),
-          const SizedBox(height: 20),
-          CustomButton(
-            onPressed: isFormValid ? _registerUser : null,
-            text: _isLoading ? 'Registering...' : 'Register',
-          ),
-        ],
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _passwordController,
+              focusNode: _passwordFocusNode,
+              obscureText: !_passwordVisible,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Enter your password',
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.password),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                    _validateForm();
+                  },
+                ),
+              ),
+              validator: _validatePassword,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _confirmPasswordController,
+              focusNode: _confirmPasswordFocusNode,
+              obscureText: !_passwordVisible,
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+                hintText: 'Re-enter your password',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.password),
+              ),
+              validator: _validateConfirmPassword,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) {
+                _registerUser();
+              },
+            ),
+            const SizedBox(height: 20),
+            CustomButton(
+              onPressed: isFormValid ? _registerUser : null,
+              text: _isLoading ? 'Registering...' : 'Register',
+            ),
+          ],
+        ),
       ),
     );
   }

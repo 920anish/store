@@ -106,7 +106,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: 'Submit',
+
+            text: _isLoading ? 'Submitting...' : 'Submit',
             onPressed: _isButtonDisabled || _isSubmitting ? null : _submitForm,
           ),
           const SizedBox(height: 20),
@@ -150,7 +151,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isSubmitting = true;
-        _isLoading = true; // Show loading animation
+        _isLoading = true;
       });
 
       await _resetPassword(email);
@@ -159,7 +160,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         _emailController.clear();
         _isButtonDisabled = true;
         _isSubmitting = false;
-        _isLoading = false; // Hide loading animation
+        _isLoading = false;
       });
     }
   }
