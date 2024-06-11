@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:store/routes.dart';
+import 'package:store/components/loading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Text('Logout'),
             ),
+            const SizedBox(height: 40),
+            const LoadingAnimation(),
           ],
         ),
       ),

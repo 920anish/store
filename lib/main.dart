@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/screens/home/home_screen.dart';
 import 'package:store/screens/welcome/welcome_screen.dart';
 
+import 'components/loading.dart';
 import 'k.dart';
 
 void main() async {
@@ -53,7 +54,11 @@ class AuthWrapper extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Scaffold(
+            body: Center(
+              child: LoadingAnimation(),
+            ),
+          );
         } else if (snapshot.hasData) {
           // Check if the user still exists in Firebase Authentication
           FirebaseAuth.instance.currentUser?.reload().then((_) async {
