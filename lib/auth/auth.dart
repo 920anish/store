@@ -32,7 +32,10 @@ class AuthService {
   // Register with email and password
   Future<User?> signUp(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       User? user = userCredential.user;
       if (user != null) {
         await user.sendEmailVerification();
@@ -45,6 +48,8 @@ class AuthService {
       return null;
     }
   }
+
+
 
   // Sign up with Google
   Future<User?> signUpWithGoogle() async {

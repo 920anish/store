@@ -60,16 +60,11 @@ class AuthWrapper extends StatelessWidget {
             ),
           );
         } else if (snapshot.hasData) {
-          // Check if the user still exists in Firebase Authentication
-          FirebaseAuth.instance.currentUser?.reload().then((_) async {
-            // Reload returns a Future<void>, so we need to await it
-            final currentUser = FirebaseAuth.instance.currentUser;
-            if (currentUser == null) {
-              // If the user doesn't exist, sign them out
-              await FirebaseAuth.instance.signOut();
-            }
-          });
-
+          final user = snapshot.data!;
+          if (!user.emailVerified) {
+            // User is not verified, do not sign out
+            return const WelcomeScreen();
+          }
           return const HomeScreen();
         } else {
           return const WelcomeScreen();
