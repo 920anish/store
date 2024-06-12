@@ -123,9 +123,15 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
               ),
               child: SvgPicture.asset(
                 assetName,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                colorFilter: ColorFilter.mode(
+                  isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  BlendMode.srcIn,
+
+                ),
+                height: 24,
+                width: 24,
               ),
             ),
             const SizedBox(height: 4),
