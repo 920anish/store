@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Poppins',
         useMaterial3: true,
         brightness: Brightness.dark,
-        colorSchemeSeed: Colors.grey,
+        colorSchemeSeed: Colors.blue,
       ),
       themeMode: ThemeMode.system,
       initialRoute: '/',
@@ -45,9 +45,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AuthWrapper extends StatelessWidget {
+class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
+  @override
+  _AuthWrapperState createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -61,6 +66,17 @@ class AuthWrapper extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           final user = snapshot.data!;
+          // Check if the user still exists in Firebase Authentication
+          FirebaseAuth.instance.currentUser?.reload().then((_) async {
+            // Reload returns a Future<void>, so we need to await it
+            final currentUser = FirebaseAuth.instance.currentUser;
+            if (currentUser == null) {
+              // If the user doesn't exist sign them out
+              await FirebaseAuth.instance.signOut();
+              return const WelcomeScreen();
+            }
+          });
+
           if (!user.emailVerified) {
             // User is not verified, do not sign out
             return const WelcomeScreen();
