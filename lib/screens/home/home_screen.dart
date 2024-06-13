@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/routes.dart';
 
@@ -91,20 +90,19 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, 'assets/home.svg', 'Home'),
-                _buildNavItem(1, 'assets/shop.svg', 'Shop'),
-                _buildNavItem(2, 'assets/favourite.svg', 'Wishlist'),
-                _buildNavItem(3, 'assets/setting.svg', 'Setting'),
+                _buildNavItem(0, const IconData(0xeab0, fontFamily: 'Icons'), 'Home'),
+                _buildNavItem(1, const IconData(0xeaa2, fontFamily: 'Icons'), 'Shop'),
+                _buildNavItem(2, const IconData(0xebee, fontFamily: 'Icons'), 'Wishlist'),
+                _buildNavItem(3, const IconData(0xebdd, fontFamily: 'Icons'), 'Setting'),
               ],
             ),
-
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, String assetName, String label) {
+  Widget _buildNavItem(int index, IconData iconData, String label) {
     bool isSelected = index == widget.currentIndex;
     return GestureDetector(
       onTap: () => widget.onTap(index),
@@ -121,17 +119,12 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: SvgPicture.asset(
-                assetName,
-                colorFilter: ColorFilter.mode(
-                  isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  BlendMode.srcIn,
-
-                ),
-                height: 24,
-                width: 24,
+              child: Icon(
+                iconData,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                size: 24,
               ),
             ),
             const SizedBox(height: 4),
