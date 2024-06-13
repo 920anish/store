@@ -17,82 +17,93 @@ class CurvedNavigationBar extends StatefulWidget {
 class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Theme.of(context).colorScheme.shadow.withOpacity(0.2)
-                : Theme.of(context).colorScheme.shadow.withOpacity(0.5),
-            blurRadius: 10,
-            spreadRadius: 2,
-          ),
-        ],
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, const IconData(0xeab0, fontFamily: 'Icons'), 'Home'),
-                _buildNavItem(1, const IconData(0xeaa2, fontFamily: 'Icons'), 'Shop'),
-                _buildNavItem(2, const IconData(0xebee, fontFamily: 'Icons'), 'Wishlist'),
-                _buildNavItem(3, const IconData(0xebdd, fontFamily: 'Icons'), 'Setting'),
-              ],
-            ),
-          ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: List.generate(4, (index) {
+            return _buildNavItem(
+              index,
+              _getIconData(index),
+              _getLabel(index),
+            );
+          }),
         ),
       ),
     );
   }
 
+  IconData _getIconData(int index) {
+    switch (index) {
+      case 0:
+        return const IconData(0xeab0, fontFamily: 'Icons');
+      case 1:
+        return const IconData(0xeaa2, fontFamily: 'Icons');
+      case 2:
+        return const IconData(0xebee, fontFamily: 'Icons');
+      case 3:
+        return const IconData(0xebdd, fontFamily: 'Icons');
+      default:
+        return Icons.error; // fallback icon
+    }
+  }
+
+  String _getLabel(int index) {
+    switch (index) {
+      case 0:
+        return 'Home';
+      case 1:
+        return 'Store';
+      case 2:
+        return 'Wishlist';
+      case 3:
+        return 'Profile';
+      default:
+        return '';
+    }
+  }
+
   Widget _buildNavItem(int index, IconData iconData, String label) {
     bool isSelected = index == widget.currentIndex;
-    return GestureDetector(
-      onTap: () => widget.onTap(index),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Icon(
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => widget.onTap(index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
                 iconData,
                 color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSurface,
                 size: 24,
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              ),
-            ),
-          ],
+              if (isSelected)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
