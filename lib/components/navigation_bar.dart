@@ -72,6 +72,10 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
     return Expanded(
       child: InkWell(
         onTap: () => widget.onTap(index),
+        splashFactory: NoSplash.splashFactory,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
@@ -80,14 +84,8 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
               Icon(
                 iconData,
                 color: isSelected
-                    ? Theme
-                    .of(context)
-                    .colorScheme
-                    .primary
-                    : Theme
-                    .of(context)
-                    .colorScheme
-                    .onSurface,
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface,
                 size: 24,
               ),
               const SizedBox(height: 4),
@@ -95,14 +93,8 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
                 label,
                 style: TextStyle(
                   color: isSelected
-                      ? Theme
-                      .of(context)
-                      .colorScheme
-                      .primary
-                      : Theme
-                      .of(context)
-                      .colorScheme
-                      .onSurface,
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
