@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/routes.dart';
 import 'package:store/components/navigation_bar.dart';
+import 'package:store/screens/home/favourite_page.dart';
+import 'package:store/screens/home/setting_page.dart';
+import 'package:store/screens/home/wishlist_page.dart';
+import 'package:store/screens/home/home_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,10 +18,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Home Page')),
-    const Center(child: Text('Store Page')),
-    const Center(child: Text('Wishlist Page')),
-    const Center(child: Text('Profile Page')),
+    const HomePage(),
+    const FavouritePage(),
+    const WishlistPage(),
+    const SettingPage(),
   ];
 
   @override
