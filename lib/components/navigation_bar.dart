@@ -70,29 +70,44 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
   Widget _buildNavItem(int index, IconData iconData, String label) {
     bool isSelected = index == widget.currentIndex;
     return Expanded(
-      child: GestureDetector(
+      child: InkWell(
         onTap: () => widget.onTap(index),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              iconData,
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurface,
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                iconData,
                 color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSurface,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ? Theme
+                    .of(context)
+                    .colorScheme
+                    .primary
+                    : Theme
+                    .of(context)
+                    .colorScheme
+                    .onSurface,
+                size: 24,
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected
+                      ? Theme
+                      .of(context)
+                      .colorScheme
+                      .primary
+                      : Theme
+                      .of(context)
+                      .colorScheme
+                      .onSurface,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
