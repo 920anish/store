@@ -18,15 +18,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final List<Map<String, String>> welcomeData = [
     {
       "text": "Welcome to your Store, Let’s shop!",
-      "image": "assets/welcome_1.svg"
+      "image": "assets/welcome_1.png"
     },
     {
       "text": "We help people connect with stores \naround the world.",
-      "image": "assets/welcome_2.svg"
+      "image": "assets/welcome_2.png"
     },
     {
       "text": "Experience the easiest way to shop. \nJust stay at home with us.",
-      "image": "assets/welcome_3.svg"
+      "image": "assets/welcome_3.png"
     },
   ];
 

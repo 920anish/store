@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeContent extends StatelessWidget {
   const WelcomeContent({
@@ -15,7 +14,7 @@ class WelcomeContent extends StatelessWidget {
     return Column(
       children: <Widget>[
         const Spacer(),
-        SvgPicture.asset(
+        Image.asset(
           image,
           height: MediaQuery.of(context).size.height * 0.35,
           width: double.infinity,

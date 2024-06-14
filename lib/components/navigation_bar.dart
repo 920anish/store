@@ -22,7 +22,7 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(4, (index) {
@@ -57,11 +57,11 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
       case 0:
         return 'Home';
       case 1:
-        return 'Store';
+        return 'Favourite';
       case 2:
         return 'Wishlist';
       case 3:
-        return 'Profile';
+        return 'Setting';
       default:
         return '';
     }
@@ -95,7 +95,7 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
                   color: isSelected
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onSurface,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
                 ),
               ),
             ],
