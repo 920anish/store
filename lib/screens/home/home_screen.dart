@@ -33,6 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: CurvedNavigationBar(
         currentIndex: _currentIndex,
