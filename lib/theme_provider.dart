@@ -5,12 +5,12 @@ class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
 
   ThemeProvider() {
-    _loadTheme();
+    loadTheme();
   }
 
   ThemeMode get themeMode => _themeMode;
 
-  void _loadTheme() async {
+  Future<void> loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final theme = prefs.getString('theme') ?? 'system';
     _themeMode = _themeModeFromString(theme);

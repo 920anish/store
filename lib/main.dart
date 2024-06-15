@@ -15,7 +15,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadTheme();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => themeProvider,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,32 +32,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Store',
-            theme: ThemeData(
-              fontFamily: 'Poppins',
-              colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
-              useMaterial3: true,
-              brightness: Brightness.light,
-            ),
-            darkTheme: ThemeData(
-              fontFamily: 'Poppins',
-              useMaterial3: true,
-              brightness: Brightness.dark,
-              colorSchemeSeed: Colors.blue,
-            ),
-            themeMode: themeProvider.themeMode,
-            initialRoute: '/',
-            onGenerateRoute: AppRoutes.generateRoute,
-            home: const AuthWrapper(),
-          );
-        },
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Store',
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
+            useMaterial3: true,
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            fontFamily: 'Poppins',
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            colorSchemeSeed: Colors.blue,
+          ),
+          themeMode: themeProvider.themeMode,
+          initialRoute: '/',
+          onGenerateRoute: AppRoutes.generateRoute,
+          home: const AuthWrapper(),
+        );
+      },
     );
   }
 }
@@ -74,15 +80,19 @@ class _AuthWrapperState extends State<AuthWrapper> {
           );
         } else if (snapshot.hasData) {
           final user = snapshot.data!;
+          // Check if the user still exists in Firebase Authentication
           FirebaseAuth.instance.currentUser?.reload().then((_) async {
             final currentUser = FirebaseAuth.instance.currentUser;
             if (currentUser == null) {
+              // If the user doesn't exist sign them out
               await FirebaseAuth.instance.signOut();
               return const WelcomeScreen();
+
             }
           });
 
           if (!user.emailVerified) {
+            // User is not verified, do not sign out
             return const WelcomeScreen();
           }
           return const HomeScreen();
