@@ -14,10 +14,102 @@ class SettingPage extends StatelessWidget {
     }
   }
 
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: <Widget>[
+            // Blurred background
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context); // Dismiss dialog on background tap
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.black.withOpacity(0.2), // Adjust opacity as needed
+              ),
+            ),
+            // Dialog content
+            Center(
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                title: const Text('Confirm Logout'),
+                content: const Text('Are you sure you want to log out?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Dismiss dialog
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Dismiss dialog
+                      _signOut(context); // Perform logout action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: const Text('Logout'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showThemeBottomSheet(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Light'),
+                onTap: () {
+                  themeProvider.setTheme(ThemeMode.light);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Dark'),
+                onTap: () {
+                  themeProvider.setTheme(ThemeMode.dark);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('System Default'),
+                onTap: () {
+                  themeProvider.setTheme(ThemeMode.system);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -49,11 +141,10 @@ class SettingPage extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-
               children: [
                 _buildOptionTile(
                   context: context,
-                  icon: Icons.account_circle,
+                  icon:  const IconData(0xeb7d, fontFamily: 'Icons'),
                   title: 'Account',
                   onTap: () {
                     // Navigate to account settings page
@@ -61,34 +152,13 @@ class SettingPage extends StatelessWidget {
                 ),
                 _buildOptionTile(
                   context: context,
-                  icon: Icons.brightness_6,
+                  icon: const IconData(0xe945, fontFamily: 'Icons'),
                   title: 'Dark Mode',
-                  trailing: DropdownButton<ThemeMode>(
-                    value: themeProvider.themeMode,
-                    onChanged: (ThemeMode? newTheme) {
-                      if (newTheme != null) {
-                        themeProvider.setTheme(newTheme);
-                      }
-                    },
-                    items: const [
-                      DropdownMenuItem(
-                        value: ThemeMode.light,
-                        child: Text('Light'),
-                      ),
-                      DropdownMenuItem(
-                        value: ThemeMode.dark,
-                        child: Text('Dark'),
-                      ),
-                      DropdownMenuItem(
-                        value: ThemeMode.system,
-                        child: Text('System Default'),
-                      ),
-                    ],
-                  ),
+                  onTap: () => _showThemeBottomSheet(context),
                 ),
                 _buildOptionTile(
                   context: context,
-                  icon: Icons.notifications,
+                  icon: const IconData(0xeb55, fontFamily: 'Icons'),
                   title: 'Notification',
                   onTap: () {
                     // Navigate to notification settings page
@@ -96,9 +166,9 @@ class SettingPage extends StatelessWidget {
                 ),
                 _buildOptionTile(
                   context: context,
-                  icon: Icons.logout,
+                  icon: const IconData(0xeae8, fontFamily: 'Icons'),
                   title: 'Logout',
-                  onTap: () => _signOut(context),
+                  onTap: () => _showLogoutDialog(context),
                 ),
               ],
             ),
