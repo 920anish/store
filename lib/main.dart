@@ -5,9 +5,10 @@ import 'package:store/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/screens/home/home_screen.dart';
 import 'package:store/screens/welcome/welcome_screen.dart';
-
+import 'package:provider/provider.dart';
 import 'components/loading.dart';
 import 'k.dart';
+import 'theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,25 +23,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Store',
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
-        useMaterial3: true,
-        brightness: Brightness.light,
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Store',
+            theme: ThemeData(
+              fontFamily: 'Poppins',
+              colorScheme: ColorScheme.fromSeed(seedColor: kPrimaryLightColor),
+              useMaterial3: true,
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              fontFamily: 'Poppins',
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              colorSchemeSeed: Colors.blue,
+            ),
+            themeMode: themeProvider.themeMode,
+            initialRoute: '/',
+            onGenerateRoute: AppRoutes.generateRoute,
+            home: const AuthWrapper(),
+          );
+        },
       ),
-      darkTheme: ThemeData(
-        fontFamily: 'Poppins',
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        colorSchemeSeed: Colors.blue,
-      ),
-      themeMode: ThemeMode.system,
-      initialRoute: '/',
-      onGenerateRoute: AppRoutes.generateRoute,
-      home: const AuthWrapper(),
     );
   }
 }
@@ -49,7 +57,7 @@ class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
   @override
-  State <AuthWrapper> createState() => _AuthWrapperState();
+  State<AuthWrapper> createState() => _AuthWrapperState();
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
@@ -66,19 +74,15 @@ class _AuthWrapperState extends State<AuthWrapper> {
           );
         } else if (snapshot.hasData) {
           final user = snapshot.data!;
-          // Check if the user still exists in Firebase Authentication
           FirebaseAuth.instance.currentUser?.reload().then((_) async {
-            // Reload returns a Future<void>, so we need to await it
             final currentUser = FirebaseAuth.instance.currentUser;
             if (currentUser == null) {
-              // If the user doesn't exist sign them out
               await FirebaseAuth.instance.signOut();
               return const WelcomeScreen();
             }
           });
 
           if (!user.emailVerified) {
-            // User is not verified, do not sign out
             return const WelcomeScreen();
           }
           return const HomeScreen();
