@@ -57,9 +57,9 @@ class _CurvedNavigationBarState extends State<CurvedNavigationBar> {
       case 0:
         return 'Home';
       case 1:
-        return 'Favourite';
+        return 'Likes';
       case 2:
-        return 'Wishlist';
+        return 'List';
       case 3:
         return 'Setting';
       default:

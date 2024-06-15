@@ -114,12 +114,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text('Don\'t have an account?'),
                       TextButton(
                         onPressed: () {
                           _navigateToScreen(AppRoutes.register);
                         },
-                        child: const Text('Register'),
+                        child: const Text('Register now!'),
                       ),
                     ],
                   ),

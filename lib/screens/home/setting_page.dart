@@ -14,59 +14,6 @@ class SettingPage extends StatelessWidget {
     }
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Stack(
-          children: <Widget>[
-            // Blurred background
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context); // Dismiss dialog on background tap
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.black.withOpacity(0.2), // Adjust opacity as needed
-              ),
-            ),
-            // Dialog content
-            Center(
-              child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                title: const Text('Confirm Logout'),
-                content: const Text('Are you sure you want to log out?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Dismiss dialog
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Dismiss dialog
-                      _signOut(context); // Perform logout action
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    child: const Text('Logout'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _showThemeBottomSheet(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
 
@@ -75,31 +22,33 @@ class SettingPage extends StatelessWidget {
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('Light'),
-                onTap: () {
-                  themeProvider.setTheme(ThemeMode.light);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Dark'),
-                onTap: () {
-                  themeProvider.setTheme(ThemeMode.dark);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('System Default'),
-                onTap: () {
-                  themeProvider.setTheme(ThemeMode.system);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('Light'),
+                  onTap: () {
+                    themeProvider.setTheme(ThemeMode.light);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Dark'),
+                  onTap: () {
+                    themeProvider.setTheme(ThemeMode.dark);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('System Default'),
+                  onTap: () {
+                    themeProvider.setTheme(ThemeMode.system);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -114,66 +63,62 @@ class SettingPage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 0,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    user?.photoURL ?? 'https://avatar.iran.liara.run/public',
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 40, // Adjusted size
+                    backgroundImage: NetworkImage(
+                      user?.photoURL ?? 'https://avatar.iran.liara.run/public',
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  user?.displayName ?? 'user',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 10),
+                  Text(
+                    user?.displayName ?? 'user',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                _buildOptionTile(
-                  context: context,
-                  icon:  const IconData(0xeb7d, fontFamily: 'Icons'),
-                  title: 'Account',
-                  onTap: () {
-                    // Navigate to account settings page
-                  },
-                ),
-                _buildOptionTile(
-                  context: context,
-                  icon: const IconData(0xe945, fontFamily: 'Icons'),
-                  title: 'Dark Mode',
-                  onTap: () => _showThemeBottomSheet(context),
-                ),
-                _buildOptionTile(
-                  context: context,
-                  icon: const IconData(0xeb55, fontFamily: 'Icons'),
-                  title: 'Notification',
-                  onTap: () {
-                    // Navigate to notification settings page
-                  },
-                ),
-                _buildOptionTile(
-                  context: context,
-                  icon: const IconData(0xeae8, fontFamily: 'Icons'),
-                  title: 'Logout',
-                  onTap: () => _showLogoutDialog(context),
-                ),
-              ],
+            _buildOptionTile(
+              context: context,
+              icon: const IconData(0xeb7d, fontFamily: 'Icons'),
+              title: 'Account',
+              onTap: () {
+                // Navigate to account settings page
+              },
             ),
-          ),
-        ],
+            _buildOptionTile(
+              context: context,
+              icon: const IconData(0xe945, fontFamily: 'Icons'),
+              title: 'Dark Mode',
+              onTap: () => _showThemeBottomSheet(context),
+            ),
+            _buildOptionTile(
+              context: context,
+              icon: const IconData(0xeb55, fontFamily: 'Icons'),
+              title: 'Notification',
+              onTap: () {
+                // Navigate to notification settings page
+              },
+            ),
+            _buildOptionTile(
+              context: context,
+              icon: const IconData(0xeae8, fontFamily: 'Icons'),
+              title: 'Logout',
+              onTap: () => _signOut(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -207,23 +152,35 @@ class SettingPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(icon, color: isDarkMode ? Colors.white : Theme.of(context).iconTheme.color),
-                    const SizedBox(width: 20),
-                    Text(
-                      title,
-                      style: isDarkMode
-                          ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)
-                          : Theme.of(context).textTheme.bodyLarge,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Icon(icon, color: isDarkMode ? Colors.white : Theme.of(context).iconTheme.color),
+                        const SizedBox(width: 20),
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: isDarkMode
+                                ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)
+                                : Theme.of(context).textTheme.bodyLarge,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                if (trailing != null) trailing,
-              ],
+                  ),
+                  if (trailing != null) trailing,
+                ],
+              ),
             ),
           ),
         ),
