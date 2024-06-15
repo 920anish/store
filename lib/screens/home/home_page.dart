@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                   ),
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage(user?.photoURL ?? 'https://via.placeholder.com/150'),
+                    backgroundImage: NetworkImage(user?.photoURL ?? 'https://avatar.iran.liara.run/public'),
                   ),
                 ],
               ),
