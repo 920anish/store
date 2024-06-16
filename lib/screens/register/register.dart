@@ -119,12 +119,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: _isLoading ? null : _registerWithGoogle,
                   ),
                   const SizedBox(height: 20),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      const Text('Already have an account?'),
+                      const SizedBox(height: 8),
                       TextButton(
                         onPressed: _navigateToLogin,
-                        child: const Text('Login now!'),
+                        child: const Text(
+                          'Login now!',
+                        ),
                       ),
                     ],
                   ),

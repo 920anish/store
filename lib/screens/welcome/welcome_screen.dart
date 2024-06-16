@@ -21,11 +21,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       "image": "assets/welcome_1.png"
     },
     {
-      "text": "We help people connect with stores \naround the world.",
+      "text": "Connect with us." ,
       "image": "assets/welcome_2.png"
     },
     {
-      "text": "Experience the easiest way to shop. \nJust stay at home with us.",
+      "text": "Shopping made easy.",
       "image": "assets/welcome_3.png"
     },
   ];

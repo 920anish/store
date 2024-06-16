@@ -111,9 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      const Text('Don\'t have an account?'),
+                      const SizedBox(height: 8),
                       TextButton(
                         onPressed: () {
                           _navigateToScreen(AppRoutes.register);
