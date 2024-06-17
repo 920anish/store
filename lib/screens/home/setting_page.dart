@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../routes.dart';
 import '../../theme_provider.dart';
 
 class SettingPage extends StatelessWidget {
@@ -10,7 +9,11 @@ class SettingPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, AppRoutes.welcome);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/',
+            (Route<dynamic> route) => false,
+      );
     }
   }
 
